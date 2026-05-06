@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-  var password = prompt("Please enter the access code to start the ESTIEM Personality Matrix:");
-  if (password != "ESTIEM2026") { // Buraya istediğin şifreyi yazabilirsin
-    alert("Incorrect password. Access denied.");
-    window.location.href = "https://www.estiem.org"; // Yanlış şifrede resmi siteye yönlendirir
-  }
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESTIEM Personality Matrix V14</title>
+    <title>ESTIEM Personality Matrix V16 - Final Release</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-
         :root {
             --estiem-green: #205e44;
             --estiem-green-light: #2a7a58;
@@ -22,17 +18,18 @@
             --card-white: #ffffff;
             --text-dark: #1e293b;
             --text-muted: #64748b;
+            --error-red: #ef4444;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             margin: 0; padding: 20px; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            color: var(--text-dark);
-            background-color: var(--bg-light);
+            color: var(--text-dark); background-color: var(--bg-light);
             background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 24px 24px;
-            overflow-x: hidden;
+            background-size: 24px 24px; overflow-x: hidden;
         }
 
         .app-container {
@@ -40,25 +37,32 @@
             gap: 50px; max-width: 1100px; width: 100%;
         }
 
-        /* LEFT: MASCOT */
-        .mascot-side { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        /* LEFT: MASCOT SIDE */
+        .mascot-side { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; width: 100%; }
         
         .mascot-bubble {
-            background: var(--card-white); color: var(--text-dark); padding: 18px 24px; 
+            background: var(--card-white); color: var(--text-dark); padding: 20px 28px; 
             border-radius: 20px; border-bottom-left-radius: 0; 
             font-size: 16px; font-weight: 700; box-shadow: 0 10px 25px rgba(0,0,0,0.08); 
-            margin-bottom: 20px; text-align: center; border: 2px solid var(--estiem-green-glow);
-            max-width: 300px; line-height: 1.5; transition: all 0.3s ease;
+            margin-bottom: 25px; text-align: center; border: 2px solid var(--estiem-green-glow);
+            max-width: 320px; line-height: 1.6; letter-spacing: 0.3px;
+            transition: all 0.3s ease;
+            min-height: 90px; display: flex; align-items: center; justify-content: center;
+            /* YENİ FIX: Boşlukların yok olmasını engelleyen kritik CSS kuralı */
+            white-space: pre-wrap; 
         }
 
         .mascot-art-large {
-            width: 100%; height: 500px; background: rgba(255,255,255,0.5);
-            border: 4px dashed var(--estiem-green-light); border-radius: 20px; 
-            display: flex; justify-content: center; align-items: center;
+            width: 100%; height: 500px;
+            background-image: url('percy_base.png'); 
+            background-size: contain; 
+            background-repeat: no-repeat; 
+            background-position: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
             color: var(--estiem-green); font-weight: 800; font-size: 18px; text-align: center; padding: 20px;
-            box-shadow: 0 20px 40px rgba(32, 94, 68, 0.1);
-            background-size: contain; background-repeat: no-repeat; background-position: center;
+            border: none; background-color: transparent; box-shadow: none;
         }
+        .mascot-art-large i, .mascot-art-large span { display: none; } 
 
         /* RIGHT: QUIZ CARD */
         .quiz-side { flex: 1.5; display: flex; justify-content: center; width: 100%; }
@@ -66,60 +70,69 @@
         .quiz-card {
             background: var(--card-white); border-radius: 24px; width: 100%; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.08), 0 0 0 1px rgba(32, 94, 68, 0.05);
-            padding: 45px; position: relative;
+            padding: 45px 50px; position: relative;
+            border-top: 8px solid var(--estiem-green); 
+            overflow: hidden; 
         }
 
-        .quiz-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
-            background: var(--estiem-green); border-top-left-radius: 24px; border-top-right-radius: 24px;
-        }
-
-        .progress-container { width: 100%; background-color: #e2e8f0; border-radius: 20px; height: 6px; margin-bottom: 30px; overflow: hidden; }
+        .header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        .back-btn { background: none; border: none; color: var(--text-muted); font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 5px 0; transition: color 0.2s; visibility: hidden; }
+        .back-btn:hover { color: var(--estiem-green); }
+        
+        .header-badges { display: flex; gap: 12px; align-items: center; }
+        .question-counter { font-size: 13px; font-weight: 800; color: var(--estiem-green); text-transform: uppercase; letter-spacing: 2px; background: var(--estiem-green-glow); padding: 8px 16px; border-radius: 30px; }
+        .phase-text { font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        
+        .progress-container { width: 100%; background-color: #e2e8f0; border-radius: 20px; height: 8px; margin-bottom: 35px; overflow: hidden; }
         .progress-bar { height: 100%; background-color: var(--estiem-green); width: 0%; border-radius: 20px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        .header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .question-counter { font-size: 13px; font-weight: 800; color: var(--estiem-green); text-transform: uppercase; letter-spacing: 2px; background: var(--estiem-green-glow); padding: 6px 14px; border-radius: 30px; }
-        .phase-text { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .helper-text { font-size: 13px; color: var(--estiem-green-light); font-weight: 600; margin-bottom: 25px; height: 16px; }
+        .helper-text { font-size: 14px; color: var(--estiem-green-light); font-weight: 700; margin-bottom: 30px; height: 16px; transition: color 0.3s; letter-spacing: 0.5px; }
+        .helper-text.error { color: var(--error-red); }
 
-        h2 { font-size: 20px; font-weight: 800; color: var(--text-dark); margin-top: 0; margin-bottom: 25px; line-height: 1.5; }
+        h2 { font-size: 22px; font-weight: 800; color: var(--text-dark); margin-top: 0; margin-bottom: 30px; line-height: 1.6; }
 
-        .question-area { transition: opacity 0.4s ease, transform 0.4s ease; }
-        .question-area.hidden { opacity: 0; transform: translateY(10px); pointer-events: none; position: absolute; width: calc(100% - 90px); }
-        .question-area.active { opacity: 1; transform: translateY(0); position: relative; }
+        #q-area { transition: opacity 0.3s ease, transform 0.3s ease; }
+        .fade-out { opacity: 0; transform: translateX(-15px); pointer-events: none; }
+        .fade-in { opacity: 1; transform: translateX(0); }
 
         .option-btn {
-            display: block; width: 100%; padding: 18px 24px; margin-bottom: 14px;
+            display: block; width: 100%; padding: 20px 24px; margin-bottom: 16px;
             background-color: var(--card-white); border: 2px solid #e2e8f0;
-            border-radius: 14px; cursor: pointer; font-size: 15px; font-weight: 600;
+            border-radius: 16px; cursor: pointer; font-size: 16px; font-weight: 600;
             color: var(--text-dark); text-align: left; transition: all 0.2s ease;
+            line-height: 1.5;
         }
 
-        .option-btn:hover { border-color: var(--estiem-green-light); transform: translateY(-2px); box-shadow: 0 4px 12px var(--estiem-green-glow); }
-        .option-btn.selected { background-color: var(--estiem-green); border-color: var(--estiem-green); color: #fff; transform: translateY(-2px); box-shadow: 0 8px 20px var(--estiem-green-glow); }
+        .option-btn:hover { border-color: var(--estiem-green-light); transform: translateY(-3px); box-shadow: 0 6px 15px var(--estiem-green-glow); }
+        .option-btn.selected { background-color: var(--estiem-green); border-color: var(--estiem-green); color: #fff; transform: translateY(-3px); box-shadow: 0 10px 25px var(--estiem-green-glow); }
+        
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } }
+        .shake-effect { animation: shake 0.35s ease both; border-color: var(--error-red) !important; }
 
-        .action-container { margin-top: 30px; display: flex; justify-content: flex-end; }
-        .next-btn { background-color: #e2e8f0; color: var(--text-muted); padding: 14px 35px; border-radius: 12px; font-weight: 800; font-size: 16px; border: none; cursor: pointer; transition: all 0.3s ease; pointer-events: none; }
-        .next-btn.active { pointer-events: auto; background-color: var(--estiem-green); color: #fff; box-shadow: 0 8px 20px var(--estiem-green-glow); }
+        .action-container { margin-top: 35px; display: flex; justify-content: flex-end; }
+        .next-btn { background-color: #e2e8f0; color: var(--text-muted); padding: 16px 40px; border-radius: 14px; font-weight: 800; font-size: 17px; border: none; cursor: pointer; transition: all 0.3s ease; pointer-events: none; }
+        .next-btn.active { pointer-events: auto; background-color: var(--estiem-green); color: #fff; box-shadow: 0 10px 25px var(--estiem-green-glow); }
         .next-btn.active:hover { background-color: var(--estiem-green-light); transform: scale(1.05); }
 
-        /* RESULT SCREEN */
-        #result-screen { display: none; text-align: center; }
-        .entity-category { font-size: 14px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        .entity-title { font-size: 38px; font-weight: 800; color: var(--estiem-green); margin: 0 0 20px 0; }
-        .entity-desc { font-size: 16px; line-height: 1.7; color: var(--text-dark); margin-bottom: 35px; padding: 0 10px; }
+        #result-screen { display: none; text-align: center; opacity: 0; transition: opacity 0.5s ease; }
+        #result-screen.fade-in { opacity: 1; }
+        
+        .entity-category { font-size: 15px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .entity-title { font-size: 40px; font-weight: 800; color: var(--estiem-green); margin: 0 0 25px 0; }
+        .entity-desc { font-size: 17px; line-height: 1.8; color: var(--text-dark); margin-bottom: 40px; padding: 0 15px; }
         
         .result-actions { display: flex; gap: 15px; flex-direction: column; }
-        .restart-btn { background-color: var(--text-dark); color: white; text-align: center; border: none; justify-content: center; display: flex; width: 100%;}
-        .restart-btn:hover { background-color: var(--estiem-green); }
-        .feedback-btn { background-color: #f8fafc; color: var(--estiem-green); border: 2px dashed var(--estiem-green); text-align: center; justify-content: center; display: flex; width: 100%; font-size: 14px;}
+        .restart-btn { background-color: var(--text-dark); color: white; text-align: center; border: none; justify-content: center; display: flex; width: 100%; padding: 18px; border-radius: 14px; cursor: pointer; font-weight: 700; transition: 0.3s;}
+        .restart-btn:hover { background-color: var(--estiem-green); color: white; }
+        .feedback-btn { background-color: #f8fafc; color: var(--estiem-green); border: 2px dashed var(--estiem-green); text-align: center; justify-content: center; display: flex; width: 100%; padding: 18px; border-radius: 14px; cursor: pointer; font-weight: 700; transition: 0.3s;}
         .feedback-btn:hover { background-color: var(--estiem-green-glow); }
 
         @media (max-width: 900px) {
             .app-container { flex-direction: column; gap: 30px; }
             .mascot-art-large { height: 250px; width: 100%; border: none; box-shadow: none; background-color: transparent;}
-            .mascot-bubble { border-bottom-left-radius: 20px; border-bottom-right-radius: 0; max-width: 90%;}
-            .quiz-area.hidden { width: 100%; }
+            .mascot-bubble { border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; max-width: 90%;}
+            .quiz-card { padding: 35px 25px; }
         }
     </style>
 </head>
@@ -131,23 +144,24 @@
             <div class="mascot-bubble" id="mascot-msg">
                 Welcome to the Network, Newbie. Let's see where you belong.
             </div>
-            <div class="mascot-art-large" style="background-image: url('tebica.png');">
-                [ Waiting for PR Artwork ]
-            </div>
+            <div class="mascot-art-large" id="mascot-art"></div>
         </div>
 
         <div class="quiz-side">
             <div class="quiz-card">
                 <div class="header-info" id="header-info">
-                    <span class="question-counter" id="counter">Step 1 / 9</span>
-                    <span class="phase-text" id="phase-label">Phase 1: Instincts</span>
+                    <button class="back-btn" id="back-btn" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    <div class="header-badges">
+                        <span class="question-counter" id="counter">Step 1 / 9</span>
+                        <span class="phase-text" id="phase-label">Phase 1: Instincts</span>
+                    </div>
                 </div>
                 
                 <div class="progress-container" id="prog-container">
                     <div class="progress-bar" id="progress"></div>
                 </div>
 
-                <div class="question-area active" id="q-area">
+                <div id="q-area" class="fade-in">
                     <h2 id="question-text">Loading...</h2>
                     <div class="helper-text" id="helper-text">Select up to 2 options.</div>
                     <div id="options-box"></div>
@@ -157,14 +171,14 @@
                     </div>
                 </div>
 
-                <div class="question-area hidden" id="result-screen">
+                <div id="result-screen">
                     <div class="entity-category" id="res-category">Category</div>
                     <div class="entity-title" id="res-title">Entity Name</div>
                     <p class="entity-desc" id="res-desc">Description</p>
                     
                     <div class="result-actions">
-                        <button class="option-btn restart-btn" onclick="location.reload()">Begin Another Journey</button>
-                        <button class="option-btn feedback-btn" id="copy-feedback" onclick="copyFeedbackData()">📋 Copy Feedback Data (For Devs)</button>
+                        <button class="restart-btn" onclick="location.reload()">Begin Another Journey</button>
+                        <button class="feedback-btn" id="copy-feedback" onclick="copyFeedbackData()">📋 Copy Feedback Data (For Algorithm Tuning)</button>
                     </div>
                 </div>
             </div>
@@ -173,99 +187,43 @@
     </div>
 
     <script>
-        let currentStep = 0;
-        const totalSteps = 9;
-        let points = { A: 0, N: 0, C: 0, P: 0 }; 
-        let preferredEnvironment = ""; 
-        let selectedOptions = [];
-        let maxSelections = 2;
-        
-        // --- FEEDBACK LOGGER ---
-        let feedbackLog = {
-            phase1: [],
-            phase2: "",
-            phase3: [],
-            finalResult: ""
-        };
-
-        let activePhase1 = [];
-        let activePhase2 = null;
-        let activePhase3 = [];
-
-        const mascotMsg = document.getElementById("mascot-msg");
-        let typewriterInterval;
-
-        function updateMascot(message) {
-            clearInterval(typewriterInterval);
-            mascotMsg.innerText = "";
-            let i = 0;
-            typewriterInterval = setInterval(() => {
-                if (i < message.length) {
-                    mascotMsg.innerText += message.charAt(i);
-                    i++;
-                } else {
-                    clearInterval(typewriterInterval);
-                }
-            }, 40);
-        }
-
-        // FULL QUESTION POOL INJECTION
         const phase1Pool = [
-            { text: "You are locked in an 'Escape Room' with three strangers. What is your natural reflex?", multi: true, options: [ { text: "Look for numerical patterns and puzzle logic.", trait: "A" }, { text: "Organize the team so panic doesn't set in.", trait: "N" }, { text: "Charm the 'Game Master' for a hint.", trait: "C" }, { text: "Start dismantling furniture for hidden tools.", trait: "P" } ] },
-            { text: "You find a glowing, unknown object in a forest. What do you do?", multi: true, options: [ { text: "Observe from a distance and deduce its energy.", trait: "A" }, { text: "Ensure the area is safe for other hikers.", trait: "N" }, { text: "Take incredible photos and create a story.", trait: "C" }, { text: "Pick it up and see if you can harness it.", trait: "P" } ] },
-            { text: "You are hosting a dinner party with historical figures.", multi: true, options: [ { text: "We engage in debates about philosophy and logic.", trait: "A" }, { text: "I focus on resolving their historical conflicts.", trait: "N" }, { text: "I entertain them with storytelling.", trait: "C" }, { text: "We draft a master project plan to fix the world.", trait: "P" } ] },
-            { text: "A meteor is hitting a town in 1 hour. You are in charge.", multi: true, options: [ { text: "Calculate optimal evacuation routes.", trait: "A" }, { text: "Focus entirely on those with mobility challenges.", trait: "N" }, { text: "Broadcast a message of clear instructions.", trait: "C" }, { text: "Grab bulldozers and build a massive trench.", trait: "P" } ] },
-            { text: "You discover a time machine. Where do you go?", multi: true, options: [ { text: "To the future to see advanced technology.", trait: "A" }, { text: "To the past to heal a major human tragedy.", trait: "N" }, { text: "To ancient Rome to experience the art.", trait: "C" }, { text: "To the Industrial Revolution to build an empire.", trait: "P" } ] },
-            { text: "You wake up on a deserted island. What is your priority?", multi: true, options: [ { text: "Map the island and catalog resources.", trait: "A" }, { text: "Check on others and keep morale high.", trait: "N" }, { text: "Write an aesthetic SOS sign in the sand.", trait: "C" }, { text: "Start physically building a shelter.", trait: "P" } ] },
-            { text: "You have to spend a week in absolute silence. How?", multi: true, options: [ { text: "Solving math puzzles or reading non-fiction.", trait: "A" }, { text: "Meditating and reflecting on inner potential.", trait: "N" }, { text: "Painting, sketching, or writing poetry.", trait: "C" }, { text: "Building a complex Lego set or woodworking.", trait: "P" } ] },
-            { text: "A massive storm knocks out power for days. Your role?", multi: true, options: [ { text: "Rationing food and mapping battery usage.", trait: "A" }, { text: "Checking on neighbors to keep spirits high.", trait: "N" }, { text: "Telling ghost stories by candlelight.", trait: "C" }, { text: "Rigging a bicycle generator for power.", trait: "P" } ] },
-            { text: "If you could instantly master one instrument:", multi: true, options: [ { text: "Piano (Structured, deep coordination).", trait: "A" }, { text: "Acoustic Guitar (Warm, brings people together).", trait: "N" }, { text: "Electric Guitar (Loud, demands attention).", trait: "C" }, { text: "Drums (Sets the pace and action).", trait: "P" } ] },
-            { text: "Your favorite part of a museum is:", multi: true, options: [ { text: "Diagrams explaining *how* things work.", trait: "A" }, { text: "Historical portraits showing the *who*.", trait: "N" }, { text: "Visually stunning abstract art exhibits.", trait: "C" }, { text: "The interactive, hands-on workshops.", trait: "P" } ] },
-            { text: "A friend complains about their job. You naturally offer:", multi: true, options: [ { text: "A data-driven analysis of their options.", trait: "A" }, { text: "An empathetic ear and safe space.", trait: "N" }, { text: "A creative idea for a side hustle.", trait: "C" }, { text: "A step-by-step plan to find a new role.", trait: "P" } ] },
-            { text: "If you were a color, you would be:", multi: true, options: [ { text: "Slate Grey (Structured, objective).", trait: "A" }, { text: "Warm Teal (Empathic, people-focused).", trait: "N" }, { text: "Neon Orange (Creative, expressive).", trait: "C" }, { text: "Forest Green (Project-driven, active).", trait: "P" } ] },
-            { text: "You see a mess on the floor. Your reaction?", multi: true, options: [ { text: "Deduce how it happened to prevent it.", trait: "A" }, { text: "Worry that someone might trip and get hurt.", trait: "N" }, { text: "See an interesting visual pattern.", trait: "C" }, { text: "Grab the mop and clean it instantly.", trait: "P" } ] },
-            { text: "If you were a robot, your primary function would be:", multi: true, options: [ { text: "Auditing data for logical inconsistencies.", trait: "A" }, { text: "Monitoring the well-being of humans.", trait: "N" }, { text: "Capturing images and creating digital art.", trait: "C" }, { text: "Leading autonomous construction projects.", trait: "P" } ] },
-            { text: "When taking notes, you prefer:", multi: true, options: [ { text: "Structured bullet points and flowcharts.", trait: "A" }, { text: "Focusing on the emotional context.", trait: "N" }, { text: "Doodling diagrams and mind maps.", trait: "C" }, { text: "Action items, due dates, and plans.", trait: "P" } ] }
+            { text: "Your local group is hosting a massive international event and a major sponsor pulls out at the last minute. Your reflex?", multi: true, options: [ { text: "Restructure the budget immediately to find financial loopholes.", trait: "A" }, { text: "Gather the core team to ensure panic doesn't destroy morale.", trait: "N" }, { text: "Draft a charismatic emergency pitch to secure a new partner.", trait: "C" }, { text: "Adapt the logistics on the ground to make the event work regardless.", trait: "P" } ] },
+            { text: "You are dropped into a foreign city where you don't speak the language.", multi: true, options: [ { text: "Study the public transport map and optimize my routes.", trait: "A" }, { text: "Find friendly locals and try to connect through gestures.", trait: "N" }, { text: "Confidently bluff my way into conversations and exclusive spots.", trait: "C" }, { text: "Start walking without a map to discover hidden areas.", trait: "P" } ] },
+            { text: "A complex, chaotic project is handed to you. How do you tame it?", multi: true, options: [ { text: "Break it down into a strict, logical timeline and delegate tasks.", trait: "A" }, { text: "Ensure everyone in the working group feels heard and valued.", trait: "N" }, { text: "Paint a grand vision of the final result to inspire the team.", trait: "C" }, { text: "Dive straight into the field and tackle the most physical tasks first.", trait: "P" } ] },
+            { text: "At a formal corporate gala dinner, where can we find you?", multi: true, options: [ { text: "Analyzing industry trends with executives in the corner.", trait: "A" }, { text: "Having a deep, meaningful conversation with a quiet guest.", trait: "N" }, { text: "Holding the center of attention, pitching a brilliant idea.", trait: "C" }, { text: "Scouting the venue, restless, waiting for the real adventure.", trait: "P" } ] },
+            { text: "When resolving a conflict between two stubborn people, you:", multi: true, options: [ { text: "Point out the logical flaws in both of their arguments.", trait: "A" }, { text: "Create a safe space for them to express their hidden feelings.", trait: "N" }, { text: "Use your negotiation skills to forge a strategic compromise.", trait: "C" }, { text: "Force them to complete a difficult physical task together.", trait: "P" } ] },
+            { text: "Your ultimate definition of 'success' in a project is:", multi: true, options: [ { text: "Maximum efficiency and measurable, data-backed ROI.", trait: "A" }, { text: "The team growing closer and learning about themselves.", trait: "N" }, { text: "A massive network expansion and external recognition.", trait: "C" }, { text: "Pushing boundaries, traveling, and executing the impossible.", trait: "P" } ] },
+            { text: "You are writing the rules for a brand new society. Priority one:", multi: true, options: [ { text: "A flawless justice and economic system.", trait: "A" }, { text: "Universal access to mental health and education.", trait: "N" }, { text: "A strong cultural identity and diplomatic outreach.", trait: "C" }, { text: "Rapid infrastructural and geographic expansion.", trait: "P" } ] },
+            { text: "A massive storm knocks out power for days. Your role?", multi: true, options: [ { text: "Rationing food and mapping battery usage systematically.", trait: "A" }, { text: "Checking on neighbors to keep spirits high.", trait: "N" }, { text: "Organizing the community into an effective communication network.", trait: "C" }, { text: "Rigging a bicycle generator for immediate power.", trait: "P" } ] }
         ];
 
         const phase2Pool = [
-            { text: "Every organization has two distinct engine rooms. Where do you function best?", multi: false, options: [ { text: "Behind the scenes: Rules, IT, and structural health.", env: "committee" }, { text: "Behind the scenes: Tending to the people and HR.", env: "committee" }, { text: "On the front stage: Delivering trainings and events.", env: "service" }, { text: "On the front stage: Organizing traveling events/competitions.", env: "service" } ] },
-            { text: "You are part of a theater production. Where are you positioned?", multi: false, options: [ { text: "Writing the script and auditing the budget.", env: "committee" }, { text: "Directing cast harmony and well-being.", env: "committee" }, { text: "Standing in center stage delivering a monologue.", env: "service" }, { text: "Managing live effects and audience flow.", env: "service" } ] },
-            { text: "You are building a complex digital universe. Which part excites you?", multi: false, options: [ { text: "Writing backend logic and securing infrastructure.", env: "committee" }, { text: "Building communities and enforcing user rules.", env: "committee" }, { text: "Delivering educational content to the final users.", env: "service" }, { text: "Leading massive in-world events.", env: "service" } ] }
+            { text: "Every great organization has two distinct realms. Where do you thrive?", multi: false, options: [ { text: "The Control Room: Designing systems, rules, and administrative health.", env: "committee" }, { text: "The Heartbeat: Recruiting, managing, and developing the people.", env: "committee" }, { text: "The Stage: Delivering speeches, trainings, and engaging crowds.", env: "service" }, { text: "The Field: Organizing dynamic, traveling events and competitions.", env: "service" } ] },
+            { text: "A legendary ESTIEM year is remembered by its...", multi: false, options: [ { text: "Bulletproof internal structures and secured long-term funding.", env: "committee" }, { text: "Flawless knowledge transfer and strong PR campaigns.", env: "committee" }, { text: "Life-changing academic and personal development trainings.", env: "service" }, { text: "Unforgettable cultural exchanges and massive student gatherings.", env: "service" } ] },
+            { text: "You are part of a massive theater production. What is your role?", multi: false, options: [ { text: "Writing the script and auditing the production budget.", env: "committee" }, { text: "Directing the cast's harmony and internal communication.", env: "committee" }, { text: "Standing in center stage, delivering a powerful monologue.", env: "service" }, { text: "Managing the live special effects and audience flow.", env: "service" } ] }
         ];
 
         const deepDivePools = {
             "A": [
-                { text: "You uncover a corporate conspiracy. How do you expose it?", options: [ { text: "Analyze hidden finances.", res: "finance" }, { text: "Decrypt their servers.", res: "tech" }, { text: "Rewrite the legal rules.", res: "rules" }, { text: "Document their flawed process.", res: "process" } ] },
-                { text: "You are designing a complex board game. Favorite part?", options: [ { text: "Balancing the in-game economy.", res: "finance" }, { text: "Creating a digital stat-tracking app.", res: "tech" }, { text: "Writing the extensive rulebook.", res: "rules" }, { text: "Structuring the historical lore.", res: "process" } ] },
                 { text: "You are auditing a massive European project. Focus on:", options: [ { text: "Cost-efficiency and ROI metrics.", res: "finance" }, { text: "IT structure of shared data.", res: "tech" }, { text: "Strict legal consistency.", res: "rules" }, { text: "Knowledge transfer across generations.", res: "process" } ] },
-                { text: "If you were a superhero, your power would be:", options: [ { text: "Predicting market shifts.", res: "finance" }, { text: "Communicating with machines.", res: "tech" }, { text: "Seeing truth in contracts.", res: "rules" }, { text: "Photographic memory of processes.", res: "process" } ] },
-                { text: "What frustrates you most in a team?", options: [ { text: "Wasting the budget.", res: "finance" }, { text: "Ignoring raw data.", res: "tech" }, { text: "Breaking legal protocols.", res: "rules" }, { text: "Repeating inefficient processes.", res: "process" } ] },
-                { text: "You are given a locked safe. Your approach?", options: [ { text: "Calculate PIN probability.", res: "finance" }, { text: "Hack the keypad infrastructure.", res: "tech" }, { text: "Analyze the rulebook.", res: "rules" }, { text: "Document previous owner habits.", res: "process" } ] }
+                { text: "What frustrates you most in a team environment?", options: [ { text: "Wasting the budget.", res: "finance" }, { text: "Ignoring raw data and digital tools.", res: "tech" }, { text: "Breaking legal protocols.", res: "rules" }, { text: "Repeating inefficient processes.", res: "process" } ] },
+                { text: "You are designing a complex system. Your favorite part?", options: [ { text: "Balancing the internal economy.", res: "finance" }, { text: "Creating a digital stat-tracking app.", res: "tech" }, { text: "Writing the extensive rulebook.", res: "rules" }, { text: "Structuring the historical lore.", res: "process" } ] }
             ],
             "N": [
-                { text: "A friend betrays you. How do you process this?", options: [ { text: "Focus on inner healing.", res: "emotions" }, { text: "Teach others how to handle it.", res: "teaching" }, { text: "Set strict professional boundaries.", res: "hr" }, { text: "Integrate back into the community.", res: "community" } ] },
-                { text: "You are running a utopian village. What is your priority?", options: [ { text: "Emotional safe spaces.", res: "emotions" }, { text: "Schools for continuous learning.", res: "teaching" }, { text: "Well-being centers for workers.", res: "hr" }, { text: "Festivals to bond the groups.", res: "community" } ] },
-                { text: "A newbie feels lost. You ask:", options: [ { text: "'What deep internal passion drives you?'", res: "emotions" }, { text: "'What presentation skills do you want?'", res: "teaching" }, { text: "'How can we structure your recruitment?'", res: "hr" }, { text: "'Which Local Group feels like home?'", res: "community" } ] },
-                { text: "A team is falling apart. How do you fix it?", options: [ { text: "Deep conflict resolution.", res: "emotions" }, { text: "Structured hard-skill training.", res: "teaching" }, { text: "Restructuring their roles.", res: "hr" }, { text: "Organizing an informal getaway.", res: "community" } ] },
-                { text: "You are read a biography. What interests you?", options: [ { text: "Internal psychological struggles.", res: "emotions" }, { text: "Mentors who taught them.", res: "teaching" }, { text: "How they managed their team.", res: "hr" }, { text: "The supportive community around them.", res: "community" } ] },
-                { text: "What frustrates you most in a team?", options: [ { text: "Dismissing people's internal potential.", res: "emotions" }, { text: "A boring presentation style.", res: "teaching" }, { text: "Ignoring team well-being.", res: "hr" }, { text: "A clique that excludes others.", res: "community" } ] }
+                { text: "A newbie feels lost in the network. You ask them:", options: [ { text: "'What deep internal passion drives you?'", res: "emotions" }, { text: "'What presentation skills do you want to learn?'", res: "teaching" }, { text: "'How can we structure your onboarding journey?'", res: "hr" }, { text: "'Which Local Group feels like home to you?'", res: "community" } ] },
+                { text: "A team is falling apart. How do you fix it?", options: [ { text: "Deep conflict resolution and empathy.", res: "emotions" }, { text: "Structured soft-skill and hard-skill training.", res: "teaching" }, { text: "Restructuring their roles and responsibilities.", res: "hr" }, { text: "Organizing an informal getaway to bond.", res: "community" } ] },
+                { text: "You are running a utopian village. What is your priority?", options: [ { text: "Emotional safe spaces.", res: "emotions" }, { text: "Schools for continuous learning.", res: "teaching" }, { text: "Well-being centers for workers.", res: "hr" }, { text: "Festivals to bond the groups.", res: "community" } ] }
             ],
             "C": [
-                { text: "You are directing a blockbuster movie. Focus on:", options: [ { text: "Visual cinematography.", res: "visuals" }, { text: "The script, dialogue, and score.", res: "audio" }, { text: "Securing funding from sponsors.", res: "corporate" }, { text: "Representing foreign cultures.", res: "diplomacy" } ] },
-                { text: "You are given a blank billboard. What goes on it?", options: [ { text: "Breathtaking abstract digital art.", res: "visuals" }, { text: "A profound quote.", res: "audio" }, { text: "A brilliant corporate pitch.", res: "corporate" }, { text: "A message of global exchange.", res: "diplomacy" } ] },
-                { text: "You are at a corporate gala. How do you spend the night?", options: [ { text: "Taking stunning portraits.", res: "visuals" }, { text: "Recording interviews for a story.", res: "audio" }, { text: "Aggressively networking with CEOs.", res: "corporate" }, { text: "Conversing with ambassadors.", res: "diplomacy" } ] },
-                { text: "You launch a new ESTIEM Magazine. The cover is:", options: [ { text: "Award-winning visual graphics.", res: "visuals" }, { text: "Official Podcast script analysis.", res: "audio" }, { text: "Top 10 rising European companies.", res: "corporate" }, { text: "Success of a bilateral LG exchange.", res: "diplomacy" } ] },
-                { text: "Your favorite museum exhibit is:", options: [ { text: "Modern Art and Aesthetic Design.", res: "visuals" }, { text: "Literary and Audio Archives.", res: "audio" }, { text: "Industry and Corporate Innovation.", res: "corporate" }, { text: "Cultural Diplomacy and Heritage.", res: "diplomacy" } ] },
-                { text: "If you had a superpower, it would be:", options: [ { text: "Creating tangible visual art.", res: "visuals" }, { text: "Instantly translating any story.", res: "audio" }, { text: "Perfect charismatic persuasion.", res: "corporate" }, { text: "Speaking every language flawlessly.", res: "diplomacy" } ] }
+                { text: "You have 5 minutes with a CEO. What is your goal?", options: [ { text: "Pitch a stunning visual branding campaign.", res: "visuals" }, { text: "Record a quick, profound interview for an audience.", res: "audio" }, { text: "Negotiate a long-term strategic partnership and funding.", res: "corporate" }, { text: "Discuss cross-cultural European integration.", res: "diplomacy" } ] },
+                { text: "You are launching a new ESTIEM initiative. The core element is:", options: [ { text: "An award-winning aesthetic and visual identity.", res: "visuals" }, { text: "Engaging written articles and deep audio discussions.", res: "audio" }, { text: "Bridging the gap between students and the corporate world.", res: "corporate" }, { text: "Breaking down language and cultural barriers.", res: "diplomacy" } ] },
+                { text: "Your superpower in a boardroom is:", options: [ { text: "Creating tangible, eye-catching visual presentations.", res: "visuals" }, { text: "Masterful storytelling and captivating speech.", res: "audio" }, { text: "Perfect charismatic persuasion for B2B sales.", res: "corporate" }, { text: "Speaking every language and mediating flawlessly.", res: "diplomacy" } ] }
             ],
             "P": [
-                { text: "You have an empty warehouse. Turn it into:", options: [ { text: "A startup competition arena.", res: "competition" }, { text: "An advanced engineering lab.", res: "academic" }, { text: "An indoor theme park.", res: "travel" }, { text: "A sustainability research center.", res: "impact" } ] },
-                { text: "You lead an extreme expedition. Which one?", options: [ { text: "Survival race across the Sahara.", res: "competition" }, { text: "Archeological dig to uncover knowledge.", res: "academic" }, { text: "Massive Europe-wide travel adventure.", res: "travel" }, { text: "Climbing Everest to push limits.", res: "impact" } ] },
-                { text: "What makes a project truly successful?", options: [ { text: "Winning against corporate competition.", res: "competition" }, { text: "Hard skills and engineering learned.", res: "academic" }, { text: "Fun, culture, and memories shared.", res: "travel" }, { text: "Positive social/environmental impact.", res: "impact" } ] },
-                { text: "You are given a million dollars. You invest in:", options: [ { text: "High-pressure startup case studies.", res: "competition" }, { text: "Lean Six Sigma training programs.", res: "academic" }, { text: "Quality-audited travel events.", res: "travel" }, { text: "Circular Economy research.", res: "impact" } ] },
-                { text: "Your favorite video game category is:", options: [ { text: "High-pressure Esports strategy.", res: "competition" }, { text: "Sandbox building/engineering games.", res: "academic" }, { text: "Open-world exploration.", res: "travel" }, { text: "Sustainability simulators.", res: "impact" } ] },
-                { text: "If you could instantly master one topic:", options: [ { text: "Advanced Corporate Case Strategy.", res: "competition" }, { text: "Advanced Thermodynamics.", res: "academic" }, { text: "Event Quality Auditing.", res: "travel" }, { text: "Circular Economy Modelling.", res: "impact" } ] }
+                { text: "What makes a journey truly unforgettable?", options: [ { text: "The intense pressure of solving a complex business case.", res: "competition" }, { text: "Learning advanced, tangible engineering methodologies.", res: "academic" }, { text: "Immersing deeply in a foreign culture's politics and lifestyle.", res: "travel" }, { text: "Pushing physical limits in extreme natural environments.", res: "impact" } ] },
+                { text: "You are organizing a massive 5-day event. The highlight is:", options: [ { text: "A high-stakes startup pitch competition.", res: "competition" }, { text: "A rigorous, certified academic training program.", res: "academic" }, { text: "An incredible city rally and non-stop social interactions.", res: "travel" }, { text: "A project that leaves a positive environmental footprint.", res: "impact" } ] },
+                { text: "If you were given a massive empty warehouse, you would turn it into:", options: [ { text: "A fast-paced startup hackathon arena.", res: "competition" }, { text: "An advanced engineering and robotics lab.", res: "academic" }, { text: "An indoor theme park simulating global travel.", res: "travel" }, { text: "A sustainability and Circular Economy research center.", res: "impact" } ] }
             ]
         };
 
@@ -307,42 +265,64 @@
             "impact_service": { cat: "Service", title: "PEAK", desc: "You believe growth happens outside the comfort zone! You combine mental resilience with physical challenges." }
         };
 
-        activePhase1 = phase1Pool.sort(() => 0.5 - Math.random()).slice(0, 5);
-        activePhase2 = phase2Pool[Math.floor(Math.random() * phase2Pool.length)];
-
+        let currentStep = 0;
+        const totalSteps = 9;
+        
+        let activeQuestions = new Array(9).fill(null);
+        let userAnswers = new Array(9).fill(null);
         let dominantTrait = "";
-        let deepDiveIndex = 0;
-        let phase3Points = {};
+        let preferredEnvironment = "";
+        let finalLogData = ""; // Veri toplama string'ini tutar
+
+        const mascotMsg = document.getElementById("mascot-msg");
+        let typewriterInterval;
+
+        // YENİ FIX: innerText yerine textContent kullanıldı
+        function updateMascot(message) {
+            clearInterval(typewriterInterval);
+            mascotMsg.textContent = ""; 
+            let i = 0;
+            typewriterInterval = setInterval(() => {
+                if (i < message.length) { 
+                    mascotMsg.textContent += message.charAt(i); 
+                    i++; 
+                } else { 
+                    clearInterval(typewriterInterval); 
+                }
+            }, 30);
+        }
+
+        function initTest() {
+            let shuffledP1 = phase1Pool.sort(() => 0.5 - Math.random()).slice(0, 5);
+            for(let i=0; i<5; i++) { activeQuestions[i] = { ...shuffledP1[i], phase: "Phase 1: Instincts", multi: true, max: 2 }; }
+            
+            activeQuestions[5] = { ...phase2Pool[Math.floor(Math.random() * phase2Pool.length)], phase: "Phase 2: Crossroads", multi: false, max: 1 };
+            renderQuestion();
+        }
 
         function renderQuestion() {
             const qArea = document.getElementById("q-area");
             const helperText = document.getElementById("helper-text");
             const nextBtn = document.getElementById("next-btn");
+            const backBtn = document.getElementById("back-btn");
             
-            qArea.classList.remove("active"); qArea.classList.add("hidden");
-            selectedOptions = []; nextBtn.classList.remove("active"); 
+            qArea.classList.remove("fade-in"); qArea.classList.add("fade-out");
 
             setTimeout(() => {
-                let currentData;
+                let currentData = activeQuestions[currentStep];
+                let selectedOptions = userAnswers[currentStep] || [];
+
+                backBtn.style.visibility = currentStep > 0 ? "visible" : "hidden";
 
                 if (currentStep < 5) {
-                    currentData = activePhase1[currentStep]; currentData.phase = "Phase 1: Instincts";
-                    maxSelections = 2; helperText.innerText = "Select up to 2 options."; helperText.style.display = "block";
-                    document.getElementById("next-btn").style.display = "block";
+                    helperText.innerText = "Select up to 2 options."; helperText.style.display = "block";
+                    if(currentStep === 0 && !userAnswers[0]) updateMascot("Welcome to the Network. Let's see where you belong.");
                 } else if (currentStep === 5) {
-                    currentData = activePhase2; currentData.phase = "Phase 2: Crossroads";
-                    maxSelections = 1; helperText.innerText = "Select 1 option."; helperText.style.display = "block";
-                    document.getElementById("next-btn").style.display = "none"; 
-                    updateMascot("A crucial fork in the road... Where will you walk?");
+                    helperText.innerText = "Crucial decision: Select 1 option."; helperText.style.display = "block";
+                    if(!userAnswers[5]) updateMascot("A crucial fork in the road... Where will you walk?");
                 } else {
-                    if(currentStep === 6) {
-                        dominantTrait = Object.keys(points).reduce((a, b) => points[a] >= points[b] ? a : b);
-                        activePhase3 = deepDivePools[dominantTrait].sort(() => 0.5 - Math.random()).slice(0, 3);
-                        updateMascot("I see your true colors shining through...");
-                    }
-                    currentData = activePhase3[deepDiveIndex]; currentData.phase = "Phase 3: The Deep Dive";
-                    maxSelections = 1; helperText.innerText = ""; helperText.style.display = "none";
-                    document.getElementById("next-btn").style.display = "none"; 
+                    helperText.style.display = "none";
+                    if(currentStep === 6 && !userAnswers[6]) updateMascot("I see your true colors shining through...");
                 }
 
                 document.getElementById("counter").innerText = `Step ${currentStep + 1} / ${totalSteps}`;
@@ -352,78 +332,164 @@
 
                 const optionsBox = document.getElementById("options-box"); optionsBox.innerHTML = "";
                 
-                currentData.options.forEach(opt => {
-                    let btn = document.createElement("button"); btn.className = "option-btn"; btn.innerText = opt.text;
-                    btn.onclick = () => toggleSelection(opt, btn, currentData.multi); optionsBox.appendChild(btn);
+                currentData.options.forEach((opt, index) => {
+                    let btn = document.createElement("button"); 
+                    btn.className = "option-btn"; 
+                    btn.innerText = opt.text;
+                    
+                    let isSelected = selectedOptions.some(o => o.text === opt.text);
+                    if(isSelected) btn.classList.add("selected");
+
+                    btn.onclick = () => toggleSelection(opt, btn, currentData.multi, currentData.max);
+                    optionsBox.appendChild(btn);
                 });
 
-                qArea.classList.remove("hidden"); qArea.classList.add("active");
-            }, 400);
+                nextBtn.classList.toggle("active", selectedOptions.length > 0);
+                nextBtn.innerText = currentStep === totalSteps - 1 ? "Finish Analysis" : "Next";
+
+                qArea.classList.remove("fade-out"); qArea.classList.add("fade-in");
+            }, 300);
         }
 
-        function toggleSelection(option, btn, isMulti) {
-            if (!isMulti) { selectedOptions = [option]; submitStep(); return; }
-            const index = selectedOptions.findIndex(o => o.text === option.text);
-            if (index > -1) { selectedOptions.splice(index, 1); btn.classList.remove("selected"); } 
-            else {
-                if (selectedOptions.length < maxSelections) { selectedOptions.push(option); btn.classList.add("selected"); } 
-                else { btn.style.transform = "translateX(5px)"; setTimeout(() => btn.style.transform = "translateX(-5px)", 50); setTimeout(() => btn.style.transform = "translateX(0)", 100); }
+        function toggleSelection(option, btn, isMulti, max) {
+            let currentSelections = userAnswers[currentStep] || [];
+
+            if (!isMulti) {
+                document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+                btn.classList.add("selected");
+                userAnswers[currentStep] = [option];
+                document.getElementById("next-btn").classList.add("active");
+                return;
             }
+
+            const index = currentSelections.findIndex(o => o.text === option.text);
+            
+            if (index > -1) {
+                currentSelections.splice(index, 1); 
+                btn.classList.remove("selected"); 
+                document.getElementById("helper-text").classList.remove("error");
+            } else {
+                if (currentSelections.length < max) { 
+                    currentSelections.push(option); 
+                    btn.classList.add("selected"); 
+                    document.getElementById("helper-text").classList.remove("error");
+                } else { 
+                    btn.classList.remove("shake-effect"); void btn.offsetWidth; btn.classList.add("shake-effect");
+                    document.getElementById("helper-text").innerText = "You can only select up to 2 options!";
+                    document.getElementById("helper-text").classList.add("error");
+                }
+            }
+
+            userAnswers[currentStep] = currentSelections;
             const nextBtn = document.getElementById("next-btn");
-            if (selectedOptions.length > 0) nextBtn.classList.add("active"); else nextBtn.classList.remove("active");
+            nextBtn.classList.toggle("active", currentSelections.length > 0);
+        }
+
+        function goBack() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderQuestion();
+            }
         }
 
         function submitStep() {
-            if (currentStep < 5) {
-                let chosenTraits = [];
-                selectedOptions.forEach(opt => { points[opt.trait]++; chosenTraits.push(opt.trait); });
-                feedbackLog.phase1.push(chosenTraits.join("+"));
-            } else if (currentStep === 5) {
-                preferredEnvironment = selectedOptions[0].env; 
-                feedbackLog.phase2 = preferredEnvironment;
-            } else {
-                let resKey = selectedOptions[0].res;
-                phase3Points[resKey] = (phase3Points[resKey] || 0) + 1;
-                feedbackLog.phase3.push(resKey);
-                deepDiveIndex++;
+            let currentSelections = userAnswers[currentStep] || [];
+            if(currentSelections.length === 0) return;
+
+            if (currentStep === 4) {
+                let counts = { A: 0, N: 0, C: 0, P: 0 };
+                for(let i=0; i<=4; i++) { userAnswers[i].forEach(opt => counts[opt.trait]++); }
+                
+                let maxPoints = 0;
+                let topTraits = [];
+                for(let trait in counts) {
+                    if(counts[trait] > maxPoints) { maxPoints = counts[trait]; topTraits = [trait]; }
+                    else if (counts[trait] === maxPoints) { topTraits.push(trait); }
+                }
+                
+                // Deterministik Tie-Breaker: P > C > A > N
+                if (topTraits.length > 1) {
+                    if(topTraits.includes('P')) dominantTrait = 'P';
+                    else if(topTraits.includes('C')) dominantTrait = 'C';
+                    else if(topTraits.includes('A')) dominantTrait = 'A';
+                    else dominantTrait = 'N';
+                } else {
+                    dominantTrait = topTraits[0];
+                }
+                
+                let shuffledP3 = deepDivePools[dominantTrait].sort(() => 0.5 - Math.random()).slice(0, 3);
+                for(let i=0; i<3; i++) { activeQuestions[6+i] = { ...shuffledP3[i], phase: "Phase 3: Deep Dive", multi: false, max: 1 }; }
+            } 
+            else if (currentStep === 5) {
+                preferredEnvironment = userAnswers[5][0].env; 
             }
 
             currentStep++;
+
             if (currentStep >= totalSteps) {
-                let finalKey = Object.keys(phase3Points).reduce((a, b) => phase3Points[a] >= phase3Points[b] ? a : b);
-                showResult(finalKey);
-            } else { renderQuestion(); }
+                calculateFinalResult();
+            } else { 
+                renderQuestion(); 
+            }
         }
 
-        function showResult(finalKey) {
-            const qArea = document.getElementById("q-area"); const resScreen = document.getElementById("result-screen");
-            let exactMatchKey = finalKey + "_" + preferredEnvironment; let finalResult = resultsData[exactMatchKey];
+        function calculateFinalResult() {
+            let p3Counts = {};
+            for(let i=6; i<=8; i++) {
+                let res = userAnswers[i][0].res;
+                p3Counts[res] = (p3Counts[res] || 0) + 1;
+            }
             
-            // Store final result for feedback
-            feedbackLog.finalResult = finalResult.title;
+            let finalKey = Object.keys(p3Counts).reduce((a, b) => p3Counts[a] >= p3Counts[b] ? a : b);
+            let exactMatchKey = finalKey + "_" + preferredEnvironment;
+            
+            // Log Data oluştur
+            let p1Summary = [];
+            for(let i=0; i<=4; i++) { p1Summary.push(userAnswers[i].map(o => o.trait).join("+")); }
+            let p3Summary = [];
+            for(let i=6; i<=8; i++) { p3Summary.push(userAnswers[i][0].res); }
+            
+            finalLogData = `[V16_LOG] P1:[${p1Summary.join(" | ")}] P2:[${preferredEnvironment}] P3:[${p3Summary.join(", ")}] -> ${resultsData[exactMatchKey].title}`;
+            
+            showResult(exactMatchKey);
+        }
+
+        function showResult(exactMatchKey) {
+            const qArea = document.getElementById("q-area"); 
+            const resScreen = document.getElementById("result-screen");
+            let finalResult = resultsData[exactMatchKey];
 
             document.getElementById("progress").style.width = "100%";
-            qArea.classList.remove("active"); qArea.classList.add("hidden");
+            qArea.classList.remove("fade-in"); qArea.classList.add("fade-out");
             
             updateMascot("The stars have aligned. Your destiny is clear.");
 
             setTimeout(() => {
-                document.getElementById("header-info").style.display = "none"; document.getElementById("prog-container").style.display = "none"; qArea.style.display = "none";
-                document.getElementById("res-category").innerText = finalResult.cat; document.getElementById("res-title").innerText = finalResult.title; document.getElementById("res-desc").innerText = finalResult.desc;
-                resScreen.style.display = "block"; setTimeout(() => { resScreen.classList.remove("hidden"); resScreen.classList.add("active"); }, 50);
-            }, 400);
+                document.getElementById("header-info").style.display = "none"; 
+                document.getElementById("prog-container").style.display = "none"; 
+                qArea.style.display = "none";
+                
+                document.getElementById("res-category").innerText = finalResult.cat; 
+                document.getElementById("res-title").innerText = finalResult.title; 
+                document.getElementById("res-desc").innerText = finalResult.desc;
+                
+                resScreen.style.display = "block"; 
+                setTimeout(() => { resScreen.classList.add("fade-in"); }, 50);
+            }, 300);
         }
 
+        // KULLANICI VERİSİNİ KOPYALAMA FONKSİYONU
         function copyFeedbackData() {
-            const logString = `[ESTIEM Feedback] P1:[${feedbackLog.phase1.join(" | ")}] P2:[${feedbackLog.phase2}] P3:[${feedbackLog.phase3.join(", ")}] -> ${feedbackLog.finalResult}`;
-            navigator.clipboard.writeText(logString).then(() => {
+            navigator.clipboard.writeText(finalLogData).then(() => {
                 const btn = document.getElementById("copy-feedback");
                 btn.innerText = "✅ Copied to Clipboard!";
-                setTimeout(() => { btn.innerText = "📋 Copy Feedback Data (For Devs)"; }, 3000);
+                setTimeout(() => { btn.innerText = "📋 Copy Feedback Data (For Algorithm Tuning)"; }, 3000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
             });
         }
 
-        renderQuestion();
+        initTest();
     </script>
 </body>
 </html>
