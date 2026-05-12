@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESTIEM Personality Matrix V16 - Final Release</title>
+    <title>ESTIEM Personality Matrix V17 - Final Release</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,7 +49,6 @@
             max-width: 320px; line-height: 1.6; letter-spacing: 0.3px;
             transition: all 0.3s ease;
             min-height: 90px; display: flex; align-items: center; justify-content: center;
-            /* YENİ FIX: Boşlukların yok olmasını engelleyen kritik CSS kuralı */
             white-space: pre-wrap; 
         }
 
@@ -63,7 +62,6 @@
             color: var(--estiem-green); font-weight: 800; font-size: 18px; text-align: center; padding: 20px;
             border: none; background-color: transparent; box-shadow: none;
         }
-        .mascot-art-large i, .mascot-art-large span { display: none; } 
 
         /* RIGHT: QUIZ CARD */
         .quiz-side { flex: 1.5; display: flex; justify-content: center; width: 100%; }
@@ -123,7 +121,6 @@
         .entity-title { font-size: 40px; font-weight: 800; color: var(--estiem-green); margin: 0 0 25px 0; }
         .entity-desc { font-size: 17px; line-height: 1.8; color: var(--text-dark); margin-bottom: 40px; padding: 0 15px; }
         
-        /* SUPABASE ACCURACY FEEDBACK UI */
         .feedback-section { border-top: 2px dashed #e2e8f0; padding-top: 25px; margin-bottom: 25px; }
         .feedback-label { font-size: 14px; font-weight: 800; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
         .feedback-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;}
@@ -211,6 +208,7 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0cnlva2JxdXZ3eWhob2J2Y3NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTA4OTAsImV4cCI6MjA5NDA2Njg5MH0.svJch4bRsN3pJTu-qquOdyH-vR8ejQy-p8M7-f5Qkhc";
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // V17 EXPANDED PHASE 1 POOL (V14 + V16 + Leader Surveys)
         const phase1Pool = [
             { text: "Your local group is hosting a massive international event and a major sponsor pulls out at the last minute. Your reflex?", multi: true, options: [ { text: "Restructure the budget immediately to find financial loopholes.", trait: "A" }, { text: "Gather the core team to ensure panic doesn't destroy morale.", trait: "N" }, { text: "Draft a charismatic emergency pitch to secure a new partner.", trait: "C" }, { text: "Adapt the logistics on the ground to make the event work regardless.", trait: "P" } ] },
             { text: "You are dropped into a foreign city where you don't speak the language.", multi: true, options: [ { text: "Study the public transport map and optimize my routes.", trait: "A" }, { text: "Find friendly locals and try to connect through gestures.", trait: "N" }, { text: "Confidently bluff my way into conversations and exclusive spots.", trait: "C" }, { text: "Start walking without a map to discover hidden areas.", trait: "P" } ] },
@@ -219,7 +217,27 @@
             { text: "When resolving a conflict between two stubborn people, you:", multi: true, options: [ { text: "Point out the logical flaws in both of their arguments.", trait: "A" }, { text: "Create a safe space for them to express their hidden feelings.", trait: "N" }, { text: "Use your negotiation skills to forge a strategic compromise.", trait: "C" }, { text: "Force them to complete a difficult physical task together.", trait: "P" } ] },
             { text: "Your ultimate definition of 'success' in a project is:", multi: true, options: [ { text: "Maximum efficiency and measurable, data-backed ROI.", trait: "A" }, { text: "The team growing closer and learning about themselves.", trait: "N" }, { text: "A massive network expansion and external recognition.", trait: "C" }, { text: "Pushing boundaries, traveling, and executing the impossible.", trait: "P" } ] },
             { text: "You are writing the rules for a brand new society. Priority one:", multi: true, options: [ { text: "A flawless justice and economic system.", trait: "A" }, { text: "Universal access to mental health and education.", trait: "N" }, { text: "A strong cultural identity and diplomatic outreach.", trait: "C" }, { text: "Rapid infrastructural and geographic expansion.", trait: "P" } ] },
-            { text: "A massive storm knocks out power for days. Your role?", multi: true, options: [ { text: "Rationing food and mapping battery usage systematically.", trait: "A" }, { text: "Checking on neighbors to keep spirits high.", trait: "N" }, { text: "Organizing the community into an effective communication network.", trait: "C" }, { text: "Rigging a bicycle generator for immediate power.", trait: "P" } ] }
+            { text: "A massive storm knocks out power for days. Your role?", multi: true, options: [ { text: "Rationing food and mapping battery usage systematically.", trait: "A" }, { text: "Checking on neighbors to keep spirits high.", trait: "N" }, { text: "Organizing the community into an effective communication network.", trait: "C" }, { text: "Rigging a bicycle generator for immediate power.", trait: "P" } ] },
+            // V14 Original Questions
+            { text: "You are locked in an 'Escape Room' with three strangers. What is your natural reflex?", multi: true, options: [ { text: "Look for numerical patterns and puzzle logic.", trait: "A" }, { text: "Organize the team so panic doesn't set in.", trait: "N" }, { text: "Charm the 'Game Master' for a hint.", trait: "C" }, { text: "Start dismantling furniture for hidden tools.", trait: "P" } ] },
+            { text: "You find a glowing, unknown object in a forest. What do you do?", multi: true, options: [ { text: "Observe from a distance and deduce its energy.", trait: "A" }, { text: "Ensure the area is safe for other hikers.", trait: "N" }, { text: "Take incredible photos and create a story.", trait: "C" }, { text: "Pick it up and see if you can harness it.", trait: "P" } ] },
+            { text: "You are hosting a dinner party with historical figures.", multi: true, options: [ { text: "We engage in debates about philosophy and logic.", trait: "A" }, { text: "I focus on resolving their historical conflicts.", trait: "N" }, { text: "I entertain them with storytelling.", trait: "C" }, { text: "We draft a master project plan to fix the world.", trait: "P" } ] },
+            { text: "A meteor is hitting a town in 1 hour. You are in charge.", multi: true, options: [ { text: "Calculate optimal evacuation routes.", trait: "A" }, { text: "Focus entirely on those with mobility challenges.", trait: "N" }, { text: "Broadcast a message of clear instructions.", trait: "C" }, { text: "Grab bulldozers and build a massive trench.", trait: "P" } ] },
+            { text: "You discover a time machine. Where do you go?", multi: true, options: [ { text: "To the future to see advanced technology.", trait: "A" }, { text: "To the past to heal a major human tragedy.", trait: "N" }, { text: "To ancient Rome to experience the art.", trait: "C" }, { text: "To the Industrial Revolution to build an empire.", trait: "P" } ] },
+            { text: "You wake up on a deserted island. What is your priority?", multi: true, options: [ { text: "Map the island and catalog resources.", trait: "A" }, { text: "Check on others and keep morale high.", trait: "N" }, { text: "Write an aesthetic SOS sign in the sand.", trait: "C" }, { text: "Start physically building a shelter.", trait: "P" } ] },
+            { text: "You have to spend a week in absolute silence. How?", multi: true, options: [ { text: "Solving math puzzles or reading non-fiction.", trait: "A" }, { text: "Meditating and reflecting on inner potential.", trait: "N" }, { text: "Painting, sketching, or writing poetry.", trait: "C" }, { text: "Building a complex Lego set or woodworking.", trait: "P" } ] },
+            { text: "If you could instantly master one instrument:", multi: true, options: [ { text: "Piano (Structured, deep coordination).", trait: "A" }, { text: "Acoustic Guitar (Warm, brings people together).", trait: "N" }, { text: "Electric Guitar (Loud, demands attention).", trait: "C" }, { text: "Drums (Sets the pace and action).", trait: "P" } ] },
+            { text: "Your favorite part of a museum is:", multi: true, options: [ { text: "Diagrams explaining *how* things work.", trait: "A" }, { text: "Historical portraits showing the *who*.", trait: "N" }, { text: "Visually stunning abstract art exhibits.", trait: "C" }, { text: "The interactive, hands-on workshops.", trait: "P" } ] },
+            { text: "A friend complains about their job. You naturally offer:", multi: true, options: [ { text: "A data-driven analysis of their options.", trait: "A" }, { text: "An empathetic ear and safe space.", trait: "N" }, { text: "A creative idea for a side hustle.", trait: "C" }, { text: "A step-by-step plan to find a new role.", trait: "P" } ] },
+            { text: "If you were a color, you would be:", multi: true, options: [ { text: "Slate Grey (Structured, objective).", trait: "A" }, { text: "Warm Teal (Empathic, people-focused).", trait: "N" }, { text: "Neon Orange (Creative, expressive).", trait: "C" }, { text: "Forest Green (Project-driven, active).", trait: "P" } ] },
+            { text: "You see a mess on the floor. Your reaction?", multi: true, options: [ { text: "Deduce how it happened to prevent it.", trait: "A" }, { text: "Worry that someone might trip and get hurt.", trait: "N" }, { text: "See an interesting visual pattern.", trait: "C" }, { text: "Grab the mop and clean it instantly.", trait: "P" } ] },
+            { text: "If you were a robot, your primary function would be:", multi: true, options: [ { text: "Auditing data for logical inconsistencies.", trait: "A" }, { text: "Monitoring the well-being of humans.", trait: "N" }, { text: "Capturing images and creating digital art.", trait: "C" }, { text: "Leading autonomous construction projects.", trait: "P" } ] },
+            { text: "When taking notes, you prefer:", multi: true, options: [ { text: "Structured bullet points and flowcharts.", trait: "A" }, { text: "Focusing on the emotional context.", trait: "N" }, { text: "Doodling diagrams and mind maps.", trait: "C" }, { text: "Action items, due dates, and plans.", trait: "P" } ] },
+            // Leader Feedback Questions
+            { text: "When you disagree with a financial decision made by people you respect, how would you handle it?", multi: true, options: [ { text: "Objectively analyze the numbers and clearly state the financial risks.", trait: "A" }, { text: "Check in with them personally to understand their perspective.", trait: "N" }, { text: "Use my negotiation skills to persuade them toward a better compromise.", trait: "C" }, { text: "Field-test an alternative solution to prove which one works better.", trait: "P" } ] },
+            { text: "If you had to design a product that produces zero waste, what would it be and how would it work?", multi: true, options: [ { text: "A modular electronic device with 100% recyclable data-tracked components.", trait: "A" }, { text: "An educational kit teaching communities about zero-waste living.", trait: "N" }, { text: "An aesthetic piece of art that generates public awareness.", trait: "C" }, { text: "A complex industrial machine that completely transforms local waste into energy.", trait: "P" } ] },
+            { text: "What would you like to learn from our existing or new partners to make ESTIEM better?", multi: true, options: [ { text: "Their efficient budget management and IT infrastructure systems.", trait: "A" }, { text: "How they foster inclusivity and mental well-being in their teams.", trait: "N" }, { text: "Their strategies for cross-cultural diplomacy and corporate negotiations.", trait: "C" }, { text: "Their techniques for organizing massive, high-impact events.", trait: "P" } ] },
+            { text: "If you had 1 right, which problem of ESTIEM Local Groups would you solve?", multi: true, options: [ { text: "Lack of centralized data management and financial transparency.", trait: "A" }, { text: "Low motivation and feelings of isolation among new members.", trait: "N" }, { text: "Poor branding and difficulty securing local sponsorships.", trait: "C" }, { text: "Insufficient hands-on trainings and academic events.", trait: "P" } ] }
         ];
 
         const phase2Pool = [
@@ -230,24 +248,36 @@
 
         const deepDivePools = {
             "A": [
+                { text: "You uncover a corporate conspiracy. How do you expose it?", options: [ { text: "Analyze hidden finances.", res: "finance" }, { text: "Decrypt their servers.", res: "tech" }, { text: "Rewrite the legal rules.", res: "rules" }, { text: "Document their flawed process.", res: "process" } ] },
+                { text: "You are designing a complex board game. Favorite part?", options: [ { text: "Balancing the in-game economy.", res: "finance" }, { text: "Creating a digital stat-tracking app.", res: "tech" }, { text: "Writing the extensive rulebook.", res: "rules" }, { text: "Structuring the historical lore.", res: "process" } ] },
                 { text: "You are auditing a massive European project. Focus on:", options: [ { text: "Cost-efficiency and ROI metrics.", res: "finance" }, { text: "IT structure of shared data.", res: "tech" }, { text: "Strict legal consistency.", res: "rules" }, { text: "Knowledge transfer across generations.", res: "process" } ] },
+                { text: "If you were a superhero, your power would be:", options: [ { text: "Predicting market shifts.", res: "finance" }, { text: "Communicating with machines.", res: "tech" }, { text: "Seeing truth in contracts.", res: "rules" }, { text: "Photographic memory of processes.", res: "process" } ] },
                 { text: "What frustrates you most in a team environment?", options: [ { text: "Wasting the budget.", res: "finance" }, { text: "Ignoring raw data and digital tools.", res: "tech" }, { text: "Breaking legal protocols.", res: "rules" }, { text: "Repeating inefficient processes.", res: "process" } ] },
-                { text: "You are designing a complex system. Your favorite part?", options: [ { text: "Balancing the internal economy.", res: "finance" }, { text: "Creating a digital stat-tracking app.", res: "tech" }, { text: "Writing the extensive rulebook.", res: "rules" }, { text: "Structuring the historical lore.", res: "process" } ] }
+                { text: "How would you write the impact part in a grant proposal? Give a concrete example.", options: [ { text: "Calculate specific ROI metrics and numerical outcomes.", res: "finance" }, { text: "Describe the database efficiency and digital transformation.", res: "tech" }, { text: "Highlight the legal frameworks established.", res: "rules" }, { text: "Detail the knowledge transfer mechanism.", res: "process" } ] }
             ],
             "N": [
+                { text: "A friend betrays you. How do you process this?", options: [ { text: "Focus on inner healing.", res: "emotions" }, { text: "Teach others how to handle it.", res: "teaching" }, { text: "Set strict professional boundaries.", res: "hr" }, { text: "Integrate back into the community.", res: "community" } ] },
+                { text: "You are running a utopian village. What is your priority?", options: [ { text: "Emotional safe spaces.", res: "emotions" }, { text: "Schools for continuous learning.", res: "teaching" }, { text: "Well-being centers for workers.", res: "hr" }, { text: "Festivals to bond the groups.", res: "community" } ] },
                 { text: "A newbie feels lost in the network. You ask them:", options: [ { text: "'What deep internal passion drives you?'", res: "emotions" }, { text: "'What presentation skills do you want to learn?'", res: "teaching" }, { text: "'How can we structure your onboarding journey?'", res: "hr" }, { text: "'Which Local Group feels like home to you?'", res: "community" } ] },
                 { text: "A team is falling apart. How do you fix it?", options: [ { text: "Deep conflict resolution and empathy.", res: "emotions" }, { text: "Structured soft-skill and hard-skill training.", res: "teaching" }, { text: "Restructuring their roles and responsibilities.", res: "hr" }, { text: "Organizing an informal getaway to bond.", res: "community" } ] },
-                { text: "You are running a utopian village. What is your priority?", options: [ { text: "Emotional safe spaces.", res: "emotions" }, { text: "Schools for continuous learning.", res: "teaching" }, { text: "Well-being centers for workers.", res: "hr" }, { text: "Festivals to bond the groups.", res: "community" } ] }
+                { text: "You are reading a biography. What interests you?", options: [ { text: "Internal psychological struggles.", res: "emotions" }, { text: "Mentors who taught them.", res: "teaching" }, { text: "How they managed their team.", res: "hr" }, { text: "The supportive community around them.", res: "community" } ] },
+                { text: "What frustrates you most in a team?", options: [ { text: "Dismissing people's internal potential.", res: "emotions" }, { text: "A boring presentation style.", res: "teaching" }, { text: "Ignoring team well-being.", res: "hr" }, { text: "A clique that excludes others.", res: "community" } ] }
             ],
             "C": [
+                { text: "You are directing a blockbuster movie. Focus on:", options: [ { text: "Visual cinematography.", res: "visuals" }, { text: "The script, dialogue, and score.", res: "audio" }, { text: "Securing funding from sponsors.", res: "corporate" }, { text: "Representing foreign cultures.", res: "diplomacy" } ] },
                 { text: "You have 5 minutes with a CEO. What is your goal?", options: [ { text: "Pitch a stunning visual branding campaign.", res: "visuals" }, { text: "Record a quick, profound interview for an audience.", res: "audio" }, { text: "Negotiate a long-term strategic partnership and funding.", res: "corporate" }, { text: "Discuss cross-cultural European integration.", res: "diplomacy" } ] },
                 { text: "You are launching a new ESTIEM initiative. The core element is:", options: [ { text: "An award-winning aesthetic and visual identity.", res: "visuals" }, { text: "Engaging written articles and deep audio discussions.", res: "audio" }, { text: "Bridging the gap between students and the corporate world.", res: "corporate" }, { text: "Breaking down language and cultural barriers.", res: "diplomacy" } ] },
-                { text: "Your superpower in a boardroom is:", options: [ { text: "Creating tangible, eye-catching visual presentations.", res: "visuals" }, { text: "Masterful storytelling and captivating speech.", res: "audio" }, { text: "Perfect charismatic persuasion for B2B sales.", res: "corporate" }, { text: "Speaking every language and mediating flawlessly.", res: "diplomacy" } ] }
+                { text: "Your superpower in a boardroom is:", options: [ { text: "Creating tangible, eye-catching visual presentations.", res: "visuals" }, { text: "Masterful storytelling and captivating speech.", res: "audio" }, { text: "Perfect charismatic persuasion for B2B sales.", res: "corporate" }, { text: "Speaking every language and mediating flawlessly.", res: "diplomacy" } ] },
+                { text: "Your favorite museum exhibit is:", options: [ { text: "Modern Art and Aesthetic Design.", res: "visuals" }, { text: "Literary and Audio Archives.", res: "audio" }, { text: "Industry and Corporate Innovation.", res: "corporate" }, { text: "Cultural Diplomacy and Heritage.", res: "diplomacy" } ] },
+                { text: "If you had a superpower, it would be:", options: [ { text: "Creating tangible visual art.", res: "visuals" }, { text: "Instantly translating any story.", res: "audio" }, { text: "Perfect charismatic persuasion.", res: "corporate" }, { text: "Speaking every language flawlessly.", res: "diplomacy" } ] }
             ],
             "P": [
                 { text: "What makes a journey truly unforgettable?", options: [ { text: "The intense pressure of solving a complex business case.", res: "competition" }, { text: "Learning advanced, tangible engineering methodologies.", res: "academic" }, { text: "Immersing deeply in a foreign culture's politics and lifestyle.", res: "travel" }, { text: "Pushing physical limits in extreme natural environments.", res: "impact" } ] },
                 { text: "You are organizing a massive 5-day event. The highlight is:", options: [ { text: "A high-stakes startup pitch competition.", res: "competition" }, { text: "A rigorous, certified academic training program.", res: "academic" }, { text: "An incredible city rally and non-stop social interactions.", res: "travel" }, { text: "A project that leaves a positive environmental footprint.", res: "impact" } ] },
-                { text: "If you were given a massive empty warehouse, you would turn it into:", options: [ { text: "A fast-paced startup hackathon arena.", res: "competition" }, { text: "An advanced engineering and robotics lab.", res: "academic" }, { text: "An indoor theme park simulating global travel.", res: "travel" }, { text: "A sustainability and Circular Economy research center.", res: "impact" } ] }
+                { text: "If you were given a massive empty warehouse, you would turn it into:", options: [ { text: "A fast-paced startup hackathon arena.", res: "competition" }, { text: "An advanced engineering and robotics lab.", res: "academic" }, { text: "An indoor theme park simulating global travel.", res: "travel" }, { text: "A sustainability and Circular Economy research center.", res: "impact" } ] },
+                { text: "You are given a million dollars. You invest in:", options: [ { text: "High-pressure startup case studies.", res: "competition" }, { text: "Lean Six Sigma training programs.", res: "academic" }, { text: "Quality-audited travel events.", res: "travel" }, { text: "Circular Economy research.", res: "impact" } ] },
+                { text: "Your favorite video game category is:", options: [ { text: "High-pressure Esports strategy.", res: "competition" }, { text: "Sandbox building/engineering games.", res: "academic" }, { text: "Open-world exploration.", res: "travel" }, { text: "Sustainability simulators.", res: "impact" } ] },
+                { text: "If you could instantly master one topic:", options: [ { text: "Advanced Corporate Case Strategy.", res: "competition" }, { text: "Advanced Thermodynamics.", res: "academic" }, { text: "Event Quality Auditing.", res: "travel" }, { text: "Circular Economy Modelling.", res: "impact" } ] }
             ]
         };
 
@@ -257,16 +287,16 @@
             "tech_committee": { cat: "Committee", title: "Information Technology (ITC)", desc: "You are the architect of the digital space! You love coding, problem-solving, and maintaining systems." },
             "tech_service": { cat: "Committee", title: "Analysis Committee (AC)", desc: "You are a data visionary! You turn raw information into beautiful dashboards to guide decisions." },
             "rules_committee": { cat: "Committee", title: "Financial & Legal (FLC)", desc: "You have a brilliant mind for governance. You thrive on reviewing contracts and advising on legalities." },
-            "rules_service": { cat: "Committee", title: "Financial & Legal (FLC)", desc: "You have a brilliant mind for governance. You thrive on reviewing contracts and advising on legalities." },
+            "rules_service": { cat: "Task Force", title: "Governance Task Force", desc: "You excel at auditing rules and implementing transparent, ethical operational protocols." },
             "process_committee": { cat: "Committee", title: "Knowledge Management (KMC)", desc: "You are the guardian of wisdom! You ensure valuable organizational knowledge is passed down flawlessly." },
             "process_service": { cat: "Committee", title: "Event Quality (EQC)", desc: "You are the standard-bearer! You have an incredible eye for detail, process, and evaluation." },
 
             "emotions_committee": { cat: "Initiative", title: "K.I.S.S.", desc: "Keep It Super Simple! You facilitate intimate spaces where ESTIEMers can explore topics deeply." },
-            "emotions_service": { cat: "Department", title: "Personal Development (PDD)", desc: "You embrace vulnerability, view failure as a gift, and create spaces where people discover their potential." },
+            "emotions_service": { cat: "Service", title: "Local Group Mentorship", desc: "You focus on profound one-on-one connections, guiding members to discover their true potential and overcoming isolation." },
             "teaching_committee": { cat: "Community", title: "Trainers Community (TC)", desc: "You are a master facilitator! You have the dynamic energy to stand in front of a crowd and deliver training." },
             "teaching_service": { cat: "Service", title: "Summer Academy", desc: "You belong in an environment of open discussion, debate, and profound academic and personal development." },
             "hr_committee": { cat: "Committee", title: "Human Resources (HRC)", desc: "You focus on recruitment, onboarding, and ensuring everyone feels valued behind the scenes." },
-            "hr_service": { cat: "Committee", title: "Human Resources (HRC)", desc: "You are the ultimate people-person. Your empathy makes you perfect for managing human resources." },
+            "hr_service": { cat: "Service", title: "Alumni Relations", desc: "You are the ultimate bridge between generations, maintaining human connections beyond graduation." },
             "community_committee": { cat: "Committee", title: "Members Committee (MC)", desc: "You monitor the pulse of the network, helping new Local Groups integrate and keeping them healthy." },
             "community_service": { cat: "Task Group", title: "LG Exchange", desc: "You love direct connections. You coordinate bilateral visits, fostering deep cultural integration." },
 
@@ -296,8 +326,8 @@
         let userAnswers = new Array(9).fill(null);
         let dominantTrait = "";
         let preferredEnvironment = "";
-        let finalLogData = ""; // Veri toplama string'ini tutar
-        let globalExactMatchKey = ""; // Supabase için sonucu tutar
+        let finalLogData = ""; 
+        let globalExactMatchKey = ""; 
 
         const mascotMsg = document.getElementById("mascot-msg");
         let typewriterInterval;
@@ -356,7 +386,10 @@
 
                 const optionsBox = document.getElementById("options-box"); optionsBox.innerHTML = "";
                 
-                currentData.options.forEach((opt, index) => {
+                // Shuffle options for added randomness and fairness
+                let displayOptions = [...currentData.options].sort(() => 0.5 - Math.random());
+
+                displayOptions.forEach((opt, index) => {
                     let btn = document.createElement("button"); 
                     btn.className = "option-btn"; 
                     btn.innerText = opt.text;
@@ -431,7 +464,7 @@
                     else if (counts[trait] === maxPoints) { topTraits.push(trait); }
                 }
                 
-                // Deterministik Tie-Breaker: P > C > A > N
+                // Deterministic Tie-Breaker: P > C > A > N
                 if (topTraits.length > 1) {
                     if(topTraits.includes('P')) dominantTrait = 'P';
                     else if(topTraits.includes('C')) dominantTrait = 'C';
@@ -466,15 +499,15 @@
             
             let finalKey = Object.keys(p3Counts).reduce((a, b) => p3Counts[a] >= p3Counts[b] ? a : b);
             let exactMatchKey = finalKey + "_" + preferredEnvironment;
-            globalExactMatchKey = exactMatchKey; // Kaydet
+            globalExactMatchKey = exactMatchKey; 
             
-            // Log Data oluştur
+            // Log Data Setup
             let p1Summary = [];
             for(let i=0; i<=4; i++) { p1Summary.push(userAnswers[i].map(o => o.trait).join("+")); }
             let p3Summary = [];
             for(let i=6; i<=8; i++) { p3Summary.push(userAnswers[i][0].res); }
             
-            finalLogData = `[V16_LOG] P1:[${p1Summary.join(" | ")}] P2:[${preferredEnvironment}] P3:[${p3Summary.join(", ")}] -> ${resultsData[exactMatchKey].title}`;
+            finalLogData = `[V17_FINAL] P1:[${p1Summary.join(" | ")}] P2:[${preferredEnvironment}] P3:[${p3Summary.join(", ")}] -> ${resultsData[exactMatchKey].title}`;
             
             showResult(exactMatchKey);
         }
@@ -503,9 +536,8 @@
             }, 300);
         }
 
-        // SUPABASE VERİ GÖNDERME FONKSİYONU
+        // SUPABASE VERI GONDERME FONKSIYONU
         async function submitFeedback(score, btnElement) {
-            // UI Güncellemesi (Tıklanan butonu seçili göster, diğerlerini kapat)
             document.querySelectorAll(".acc-btn").forEach(b => {
                 b.disabled = true;
                 b.style.opacity = "0.5";
@@ -513,7 +545,6 @@
             btnElement.classList.add("voted");
             btnElement.style.opacity = "1";
 
-            // Seçilen rotayı toparla
             let p3Path = [];
             for(let i=6; i<=8; i++) {
                 if(userAnswers[i] && userAnswers[i][0]) {
@@ -540,7 +571,7 @@
             }
         }
 
-        // KULLANICI VERİSİNİ KOPYALAMA FONKSİYONU (Yedek olarak duruyor)
+        // KULLANICI VERISINI KOPYALAMA FONKSIYONU
         function copyFeedbackData() {
             navigator.clipboard.writeText(finalLogData).then(() => {
                 const btn = document.getElementById("copy-feedback");
