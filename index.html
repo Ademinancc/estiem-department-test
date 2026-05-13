@@ -566,15 +566,25 @@
                 }
             }
 
+            // Calculate Phase 1 Trait Distribution for better calibration data
+            let counts = { A: 0, N: 0, C: 0, P: 0 };
+            for(let i=0; i<=4; i++) { 
+                if(userAnswers[i]) {
+                    userAnswers[i].forEach(opt => counts[opt.trait]++); 
+                }
+            }
+            const p1Distribution = `A:${counts.A}, N:${counts.N}, C:${counts.C}, P:${counts.P}`;
+
             const payload = {
                 trait: dominantTrait,
                 env: preferredEnvironment,
                 result: globalExactMatchKey,
                 accuracy: score,
-                path: p3Path.join(",")
+                path: p3Path.join(","),
+                p1_data: p1Distribution // Added for calibration
             };
 
-            const { data, error } = await supabaseClient.from('results_v16').insert([payload]);
+            const { data, error } = await supabaseClient.from('results_v17').insert([payload]);
             
             if(error) {
                 console.error("Supabase Error:", error);
